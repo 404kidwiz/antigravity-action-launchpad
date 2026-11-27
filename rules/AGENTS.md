@@ -1,8 +1,9 @@
 # Antigravity Action Launchpad — Inline Chat UI Rules
 
-## Inline Action Launchpad (`antigravity-action-launchpad_deck` -> `deck_actions`)
-- **Proactive follow-up pills:** At the end of most completed tasks (builds, fixes, reviews, research, explanations, or proposals) whenever 2–3 clear, actionable next steps exist — or before destructive/high-stakes actions (deploy, send, delete, migration, restart) — call `deck_actions` so the user can click a row (or press `1`–`3` / `Enter`) instead of typing a follow-up manually.
-- **When to skip:** Skip `deck_actions` on trivial one-line factual Q&A, pure acknowledgments, or interim progress updates while waiting on background tasks.
+## Inline Action Launchpad (`*_deck` -> `deck_actions`, e.g. `antigravity-action-launchpad_deck` or `antigravity-deck_deck`)
+- **Proactive follow-up pills (default ON for every completed turn):** ALWAYS call `deck_actions` at the end of **every** completed task, build, fix, review, research report, status check, explanation, or proposal — **even when only 1 concrete follow-up action exists** (pair it with a quiet `Wrap Up` ghost exit) — and before destructive/high-stakes actions (deploy, send, delete, migration, restart) so the user can click a row (or press `1`–`3` / `Enter`) instead of typing a follow-up manually.
+- **`Next:` invariant:** Never emit a `Next: Reply go ...` follow-up line without rendering a matching clickable `deck_actions` card directly above it.
+- **When to skip (narrow list only):** Skip `deck_actions` ONLY on pure 1-line acknowledgments ("thanks", "ok"), trivial standalone factual Q&A with zero next step, or interim waiting updates while paused on a background task, timer, or user login.
 - **Flush Command List & decision rationale (`label` + `sublabel` + `hint` + `why`):**
   - Each active action renders as a **flush, single-line command row** (never nested boxes): give it a crisp title (`label`, 3–5 words, e.g. `Run unit test suite`) paired with a short muted inline scope cue (`sublabel`, 3–6 words, e.g. `Verify changed auth modules`), plus an optional short trust `badge` (`Read-only`, `Dry-run`) when helpful. Use at most 3 visible active rows (`primary` / `neutral` / `danger`) plus an optional quiet header exit (`tone: "ghost"`, e.g. `Wrap Up`); 4th+ active actions fold cleanly into a flush `+N more options` row.
   - **Always include both `hint` and `why` on active actions:**
