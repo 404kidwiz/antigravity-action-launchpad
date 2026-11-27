@@ -1,5 +1,5 @@
 {
-  "name": "antigravity-deck",
+  "name": "antigravity-action-launchpad",
   "displayName": "Antigravity Action Launchpad",
   "version": "1.0.0",
   "description": "Inline chat Action Launchpad MCP App: ultra-compact 1-line follow-up pills, live hover Why/What Decision Inspector, A2UI-inspired ChoicePicker chips, inline short text inputs, checkboxes, and 2-step approval gates.",
@@ -7,8 +7,8 @@
     "name": "Andrew Morris",
     "url": "https://github.com/404kidwiz"
   },
-  "homepage": "https://github.com/404kidwiz/antigravity-suggestion-helper",
-  "repository": "https://github.com/404kidwiz/antigravity-suggestion-helper",
+  "homepage": "https://github.com/404kidwiz/antigravity-action-launchpad",
+  "repository": "https://github.com/404kidwiz/antigravity-action-launchpad",
   "logo": "assets/logo.svg",
   "suggestedPrompts": [
     "Show an inline Action Launchpad with clickable next-step options for my current task",

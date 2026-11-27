@@ -21,7 +21,7 @@ if (tools.length !== 1 || tools[0].name !== "deck_actions") {
   throw new Error(`Expected only deck_actions tool, got: ${tools.map((t) => t.name).join(", ")}`);
 }
 const uri = tools[0]._meta?.ui?.resourceUri;
-if (uri !== "ui://antigravity-deck/actions.html") {
+if (uri !== "ui://antigravity-action-launchpad/actions.html") {
   throw new Error(`Unexpected resourceUri: ${uri}`);
 }
 if (tools[0]._meta?.["com.google.antigravity/ui"]?.entrypoints) {
@@ -30,7 +30,7 @@ if (tools[0]._meta?.["com.google.antigravity/ui"]?.entrypoints) {
 
 const { resources } = await client.listResources();
 console.log(`Resources registered (${resources.length}):`, resources.map((r) => r.uri).join(", "));
-if (resources.length !== 1 || resources[0].uri !== "ui://antigravity-deck/actions.html") {
+if (resources.length !== 1 || resources[0].uri !== "ui://antigravity-action-launchpad/actions.html") {
   throw new Error(`Expected only actions.html resource, got: ${resources.map((r) => r.uri).join(", ")}`);
 }
 

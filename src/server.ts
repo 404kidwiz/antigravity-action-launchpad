@@ -22,19 +22,19 @@ function readAppHtml(filename: string): string {
 }
 
 const server = new McpServer({
-  name: "antigravity-deck",
+  name: "antigravity-action-launchpad",
   version: "1.0.0",
 });
 
 registerAppResource(
   server,
   "Action Launchpad UI",
-  "ui://antigravity-deck/actions.html",
+  "ui://antigravity-action-launchpad/actions.html",
   { _meta: { ui: { prefersBorder: false } } },
   async () => ({
     contents: [
       {
-        uri: "ui://antigravity-deck/actions.html",
+        uri: "ui://antigravity-action-launchpad/actions.html",
         mimeType: RESOURCE_MIME_TYPE,
         text: readAppHtml("actions.html"),
       },
@@ -269,7 +269,7 @@ registerAppTool(
         .describe("Clickable actions (1-3 primary/neutral/danger command rows + optional tone:'ghost' exit placed flush in the header; 4th+ active actions fold cleanly into a '+N more' row)."),
     },
     _meta: {
-      ui: { resourceUri: "ui://antigravity-deck/actions.html" },
+      ui: { resourceUri: "ui://antigravity-action-launchpad/actions.html" },
     },
   },
   async (args) => {

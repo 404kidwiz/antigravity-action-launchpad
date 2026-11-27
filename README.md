@@ -1,4 +1,4 @@
-# Antigravity Action Launchpad (`antigravity-deck`)
+# Antigravity Action Launchpad (`antigravity-action-launchpad`)
 
 ![Antigravity Action Launchpad — Inline pills, ChoicePicker & approval gates for MCP](assets/hero.png)
 
@@ -32,9 +32,9 @@ Works cross-platform (**macOS, Linux, and Windows**) with **Node.js 20+** and sh
 Copy and paste this prompt directly into **Google Antigravity**. Your agent will install the plugin and ask just **2 quick questions** — letting you start with a **super slimmed-down** setup or unlock the **full** deck (and switch anytime):
 
 ```text
-Install and configure the Antigravity Action Launchpad plugin for me from https://github.com/404kidwiz/antigravity-suggestion-helper:
+Install and configure the Antigravity Action Launchpad plugin for me from https://github.com/404kidwiz/antigravity-action-launchpad:
 
-1. Clone https://github.com/404kidwiz/antigravity-suggestion-helper.git into ~/.gemini/config/plugins/antigravity-deck (if it already exists, pull latest main) and verify Node.js 20+ is available.
+1. Clone https://github.com/404kidwiz/antigravity-action-launchpad.git into ~/.gemini/config/plugins/antigravity-action-launchpad (if it already exists, pull latest main) and verify Node.js 20+ is available.
 2. Ask me just 2 quick multiple-choice questions so it fits how I work without being too much all at once:
    - Question 1 (Mode): Start slimmed down or unlock the full deck?
      • Slim (Recommended to start) — Super clean 1-line suggestion pills + hover Why/What inspector only (no chips, inputs, or extra controls)
@@ -43,7 +43,7 @@ Install and configure the Antigravity Action Launchpad plugin for me from https:
      • Balanced (Recommended) — After completed tasks & key decision points; skip quick Q&A
      • Minimal — Only before high-stakes actions or multi-option choices
      • Proactive — On almost every substantive turn so I rarely have to type follow-ups
-3. Tailor ~/.gemini/config/plugins/antigravity-deck/rules/AGENTS.md to my 2 choices (noting I can ask to switch between Slim and Full anytime), link me to Customizations to enable the plugin if needed, and show a quick live preview card matching my preset.
+3. Tailor ~/.gemini/config/plugins/antigravity-action-launchpad/rules/AGENTS.md to my 2 choices (noting I can ask to switch between Slim and Full anytime), link me to Customizations to enable the plugin if needed, and show a quick live preview card matching my preset.
 ```
 
 ### Option B — Manual drop-in (no `npm install` needed)
@@ -51,7 +51,7 @@ Install and configure the Antigravity Action Launchpad plugin for me from https:
 Clone or download this repository directly into your Antigravity plugins directory:
 
 ```bash
-git clone https://github.com/404kidwiz/antigravity-suggestion-helper.git ~/.gemini/config/plugins/antigravity-deck
+git clone https://github.com/404kidwiz/antigravity-action-launchpad.git ~/.gemini/config/plugins/antigravity-action-launchpad
 ```
 
 Then enable **Antigravity Action Launchpad** in Antigravity's **Customizations / Plugins** page (requires Node.js 20+ on `PATH`).
@@ -131,7 +131,7 @@ Every section outside `actions` is optional and omitted from the card unless pas
 
 ## Architecture
 
-- [`src/server.ts`](src/server.ts) — Stdio MCP server (`@modelcontextprotocol/sdk` + `@modelcontextprotocol/ext-apps`) exposing `deck_actions` and `ui://antigravity-deck/actions.html` with input/choice/action sanitization.
+- [`src/server.ts`](src/server.ts) — Stdio MCP server (`@modelcontextprotocol/sdk` + `@modelcontextprotocol/ext-apps`) exposing `deck_actions` and `ui://antigravity-action-launchpad/actions.html` with input/choice/action sanitization.
 - [`src/ui/actions.ts`](src/ui/actions.ts) + [`src/ui/shared.ts`](src/ui/shared.ts) + [`src/ui/shared.css`](src/ui/shared.css) — Zero-framework vanilla TypeScript MCP App bundled into a single self-contained `dist/actions.html`.
 - [`rules/AGENTS.md`](rules/AGENTS.md) — Plugin instructions teaching agents when to emit `deck_actions` and how to anchor cards cleanly at the bottom of replies.
 - [`DESIGN.md`](DESIGN.md) — Surface tokens, contrast rules, and interaction contract.

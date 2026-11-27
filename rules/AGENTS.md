@@ -1,6 +1,6 @@
 # Antigravity Action Launchpad — Inline Chat UI Rules
 
-## Inline Action Launchpad (`antigravity-deck_deck` -> `deck_actions`)
+## Inline Action Launchpad (`antigravity-action-launchpad_deck` -> `deck_actions`)
 - **Proactive follow-up pills:** At the end of most completed tasks (builds, fixes, reviews, research, explanations, or proposals) whenever 2–3 clear, actionable next steps exist — or before destructive/high-stakes actions (deploy, send, delete, migration, restart) — call `deck_actions` so the user can click a row (or press `1`–`3` / `Enter`) instead of typing a follow-up manually.
 - **When to skip:** Skip `deck_actions` on trivial one-line factual Q&A, pure acknowledgments, or interim progress updates while waiting on background tasks.
 - **Flush Command List & decision rationale (`label` + `sublabel` + `hint` + `why`):**
