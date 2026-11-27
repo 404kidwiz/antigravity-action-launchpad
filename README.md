@@ -8,6 +8,8 @@ A lightweight, zero-framework **MCP App** plugin for Google Antigravity that ren
 
 Works cross-platform (**macOS, Linux, and Windows**) with **Node.js 20+** and ships with self-contained prebuilt `dist/` bundles (zero runtime `node_modules` required for end users).
 
+> **Surface Compatibility:** Interactive inline `ui://` cards render in the **Antigravity App (`v2.34.0+`)** (and any MCP client advertising `io.modelcontextprotocol/ui`). In **Antigravity IDE** (standalone), **Antigravity CLI (`agy`)**, and other non-UI MCP clients, the plugin auto-discovers and runs normally — `deck_actions` detects the missing UI capability and automatically returns a clean numbered plain-text list with each option's `Why` / `What` rationale and parameter summary.
+
 ![Action Launchpad — Warm Light & Dark 1-Line Suggestion Pills](assets/preview-pills.png)
 
 ![Action Launchpad — ChoicePicker Chips, TextField Inputs & Approval Mode](assets/preview-controls.png)

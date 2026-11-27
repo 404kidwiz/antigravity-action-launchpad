@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
+  getUiCapability,
   registerAppResource,
   registerAppTool,
   RESOURCE_MIME_TYPE,
@@ -313,17 +314,120 @@ registerAppTool(
       inputs,
       actions,
     };
+    const text = hostSupportsUi()
+      ? `Rendered inline Action Launchpad (${mode}): ${actions.map((a) => a.label).join(" | ")}. If you already wrote your full answer before calling this tool, end the turn now with ONLY the 1-line Next: + Skills: footer so the card stays at the bottom (do not repeat or add paragraphs/tables below the card).`
+      : formatPlainTextFallback(payload);
     return {
       content: [
         {
           type: "text",
-          text: `Rendered inline Action Launchpad (${mode}): ${actions.map((a) => a.label).join(" | ")}. If you already wrote your full answer before calling this tool, end the turn now with ONLY the 1-line Next: + Skills: footer so the card stays at the bottom (do not repeat or add paragraphs/tables below the card).`,
+          text,
         },
       ],
       structuredContent: payload,
     };
   }
 );
+
+function hostSupportsUi(): boolean {
+  const uiCap = getUiCapability(server.server.getClientCapabilities());
+  if (!uiCap) return false;
+  return !uiCap.mimeTypes || uiCap.mimeTypes.includes(RESOURCE_MIME_TYPE);
+}
+
+function formatPlainTextFallback(payload: {
+  mode: "pills" | "approval";
+  heading: string;
+  summary: string;
+  risk: "low" | "medium" | "high";
+  targets: string[];
+  toggles: Array<{ id: string; label: string; checked?: boolean }>;
+  choices: Array<{
+    id: string;
+    label: string;
+    multiple: boolean;
+    required: boolean;
+    options: Array<{ value: string; label: string }>;
+    selected: string[];
+  }>;
+  inputs: Array<{
+    id: string;
+    label: string;
+    placeholder?: string;
+    value?: string;
+    required: boolean;
+    maxLength: number;
+  }>;
+  actions: Array<{
+    id: string;
+    label: string;
+    sublabel?: string;
+    badge?: string;
+    prompt: string;
+    tone?: "primary" | "neutral" | "ghost" | "danger";
+    hint?: string;
+    why?: string;
+  }>;
+}): string {
+  const lines: string[] = [
+    "Action Launchpad (plain-text fallback — host does not advertise io.modelcontextprotocol/ui)",
+  ];
+  const header =
+    payload.mode === "approval"
+      ? `${payload.heading} [${payload.risk.toUpperCase()} RISK]`
+      : payload.heading;
+  lines.push(header);
+  if (payload.summary) lines.push(payload.summary);
+  if (payload.targets.length > 0) lines.push(`Targets: ${payload.targets.join(", ")}`);
+
+  const active = payload.actions.filter((a) => a.tone !== "ghost");
+  const ghosts = payload.actions.filter((a) => a.tone === "ghost");
+
+  if (active.length > 0) {
+    lines.push("");
+    active.forEach((a, idx) => {
+      const tags: string[] = [];
+      if (a.tone === "primary") tags.push("Recommended");
+      if (a.tone === "danger") tags.push("Danger — confirm before running");
+      if (a.badge) tags.push(a.badge);
+      const sub = a.sublabel ? ` — ${a.sublabel}` : "";
+      const tagStr = tags.length > 0 ? ` [${tags.join(" | ")}]` : "";
+      lines.push(`${idx + 1}. ${a.label}${sub}${tagStr}`);
+      if (a.why) lines.push(`   Why: ${a.why}`);
+      if (a.hint) lines.push(`   What: ${a.hint}`);
+    });
+  }
+
+  for (const g of ghosts) {
+    const desc = g.hint || g.why || g.sublabel;
+    lines.push(desc ? `- ${g.label}: ${desc}` : `- ${g.label}`);
+  }
+
+  const params: string[] = [];
+  for (const c of payload.choices) {
+    const sel = new Set(c.selected);
+    const meta = [c.multiple ? "multi" : "single", c.required ? "required" : ""].filter(Boolean).join(", ");
+    const opts = c.options.map((o) => (sel.has(o.value) ? `${o.label} (selected)` : o.label)).join(" | ");
+    params.push(`- ${c.label} (${meta}): ${opts}`);
+  }
+  for (const i of payload.inputs) {
+    const req = i.required ? " (required)" : "";
+    const val = i.value ? `"${i.value}"` : i.placeholder ? `(placeholder: "${i.placeholder}")` : "(empty)";
+    params.push(`- ${i.label}${req}: ${val}`);
+  }
+  for (const t of payload.toggles) {
+    params.push(`- [${t.checked ? "x" : " "}] ${t.label}`);
+  }
+  if (params.length > 0) {
+    lines.push("", "Parameters:", ...params);
+  }
+
+  lines.push(
+    "",
+    'Note: Because this host does not mount ui:// iframes, share the numbered options concisely in your reply so the user can reply with a number (e.g. "1") or "go".'
+  );
+  return lines.join("\n");
+}
 
 const transport = new StdioServerTransport();
 await server.connect(transport);

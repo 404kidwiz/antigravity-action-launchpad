@@ -6,13 +6,24 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 
-const transport = new StdioClientTransport({
+const uiTransport = new StdioClientTransport({
   command: process.execPath,
   args: ["--no-warnings=ExperimentalWarning", path.join(ROOT, "dist", "server.mjs")],
 });
 
-const client = new Client({ name: "deck-smoke-test", version: "1.0.0" });
-await client.connect(transport);
+const client = new Client(
+  { name: "deck-smoke-test-ui", version: "1.0.0" },
+  {
+    capabilities: {
+      extensions: {
+        "io.modelcontextprotocol/ui": {
+          mimeTypes: ["text/html;profile=mcp-app"],
+        },
+      },
+    },
+  }
+);
+await client.connect(uiTransport);
 
 const { tools } = await client.listTools();
 console.log(`Tools registered (${tools.length}):`, tools.map((t) => t.name).join(", "));
@@ -149,8 +160,107 @@ if (
 console.log("  OK deck_actions supports choices, inputs (sanitization/maxLength), tone:'ghost', sublabel, badge, hint, why, and appliesToggles");
 
 const emptyCheck = await client.callTool({ name: "deck_actions", arguments: {} });
-if (emptyCheck.isError) throw new Error(`deck_actions({}) failed: ${JSON.stringify(emptyCheck)}`);
-console.log(`  OK deck_actions({}) -> ${emptyCheck.content?.[0]?.text ?? ""}`);
+const uiText = emptyCheck.content?.[0]?.text ?? "";
+if (emptyCheck.isError || !uiText.startsWith("Rendered inline Action Launchpad (pills):")) {
+  throw new Error(`UI-capable deck_actions({}) failed: ${JSON.stringify(emptyCheck)}`);
+}
+console.log(`  OK UI-capable host deck_actions({}) -> ${uiText}`);
 
 await client.close();
+
+// Non-UI host check (e.g. Antigravity IDE, Antigravity CLI, or plain-text MCP clients)
+const plainTransport = new StdioClientTransport({
+  command: process.execPath,
+  args: ["--no-warnings=ExperimentalWarning", path.join(ROOT, "dist", "server.mjs")],
+});
+const plainClient = new Client({ name: "deck-smoke-test-plain", version: "1.0.0" });
+await plainClient.connect(plainTransport);
+
+const fallbackPills = await plainClient.callTool({
+  name: "deck_actions",
+  arguments: {
+    heading: "Next Steps",
+    choices: [
+      {
+        id: "target",
+        label: "Target",
+        required: true,
+        options: [
+          { value: "local", label: "Local Mac" },
+          { value: "remote", label: "Both Macs" },
+        ],
+        selected: ["local"],
+      },
+    ],
+    inputs: [{ id: "branch", label: "Branch", value: "feat/ide-fallback", required: true }],
+    toggles: [{ id: "tests", label: "Run smoke tests", checked: true }],
+    actions: [
+      {
+        id: "run",
+        label: "Run selected checks",
+        sublabel: "Verify local & remote",
+        badge: "Safe",
+        prompt: "go",
+        tone: "primary",
+        why: "Confirms everything builds cleanly before pushing.",
+        hint: "Runs build and stdio smoke tests.",
+      },
+      {
+        id: "wrap",
+        label: "Wrap Up",
+        prompt: "done",
+        tone: "ghost",
+        hint: "Closes out without extra steps.",
+      },
+    ],
+  },
+});
+const fallbackText = fallbackPills.content?.[0]?.text ?? "";
+if (
+  fallbackPills.isError ||
+  fallbackText.includes("Rendered inline Action Launchpad") ||
+  !fallbackText.includes("plain-text fallback") ||
+  !fallbackText.includes("1. Run selected checks — Verify local & remote [Recommended | Safe]") ||
+  !fallbackText.includes("Why: Confirms everything builds cleanly before pushing.") ||
+  !fallbackText.includes("What: Runs build and stdio smoke tests.") ||
+  !fallbackText.includes("- Wrap Up: Closes out without extra steps.") ||
+  !fallbackText.includes("Target (single, required): Local Mac (selected) | Both Macs") ||
+  !fallbackText.includes('Branch (required): "feat/ide-fallback"') ||
+  !fallbackText.includes("[x] Run smoke tests")
+) {
+  throw new Error(`Non-UI host plain-text fallback check failed:\n${fallbackText}`);
+}
+
+const fallbackApproval = await plainClient.callTool({
+  name: "deck_actions",
+  arguments: {
+    mode: "approval",
+    heading: "Deploy Production",
+    summary: "Applies pending SQL migrations and restarts workers.",
+    risk: "high",
+    targets: ["migrations/004.sql", "api-worker"],
+    actions: [
+      {
+        id: "deploy",
+        label: "Apply migration & deploy",
+        prompt: "deploy",
+        tone: "danger",
+        why: "Unblocks the v1.1 rollout.",
+        hint: "Runs migrations and restarts production workers.",
+      },
+    ],
+  },
+});
+const approvalText = fallbackApproval.content?.[0]?.text ?? "";
+if (
+  fallbackApproval.isError ||
+  !approvalText.includes("Deploy Production [HIGH RISK]") ||
+  !approvalText.includes("Targets: migrations/004.sql, api-worker") ||
+  !approvalText.includes("Danger — confirm before running")
+) {
+  throw new Error(`Non-UI host approval fallback check failed:\n${approvalText}`);
+}
+console.log("  OK non-UI host (Antigravity IDE / CLI) falls back to numbered Why/What list & approval summary");
+
+await plainClient.close();
 console.log("ALL MCP SMOKE TESTS PASSED.");
