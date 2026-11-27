@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "deck": {
+      "command": "node",
+      "args": [
+        "--no-warnings=ExperimentalWarning",
+        "${PLUGIN_ROOT}/dist/server.mjs"
+      ]
+    }
+  }
+}

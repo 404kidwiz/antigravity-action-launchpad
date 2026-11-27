@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <!-- High-contrast orbital instrument mark with ~12% outer breathing margin -->
+  <rect x="14" y="14" width="100" height="100" rx="22" fill="#0E1726"/>
+  <rect x="15" y="15" width="98" height="98" rx="21" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="2"/>
+  <!-- Outer calibrated orbit ring -->
+  <circle cx="64" cy="64" r="34" stroke="#66B2FF" stroke-width="2.2" stroke-dasharray="6 5" stroke-linecap="round"/>
+  <!-- Tilted elliptical trajectory -->
+  <ellipse cx="64" cy="64" rx="40" ry="17" transform="rotate(-28 64 64)" stroke="#3CD6A3" stroke-width="2.4"/>
+  <!-- Gravity core -->
+  <circle cx="64" cy="64" r="10" fill="#66B2FF"/>
+  <circle cx="64" cy="64" r="4.5" fill="#0E1726"/>
+  <!-- Orbital satellite node -->
+  <circle cx="95" cy="47.5" r="5" fill="#F6B94D"/>
+  <!-- Precision crosshair ticks -->
+  <path d="M64 22V28M64 100V106M22 64H28M100 64H106" stroke="#E2E8F0" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round"/>
+</svg>
