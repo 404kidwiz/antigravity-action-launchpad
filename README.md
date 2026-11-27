@@ -27,7 +27,26 @@ Works cross-platform (**macOS, Linux, and Windows**) with **Node.js 20+** and sh
 
 ## Quick Install
 
-### Option A — Drop-in prebuilt plugin (recommended, no `npm install` needed)
+### Option A — 1-Paste Agent Setup (Recommended — zero manual config)
+
+Copy and paste this prompt directly into **Google Antigravity**. Your agent will install the plugin and ask just **2 quick questions** — letting you start with a **super slimmed-down** setup or unlock the **full** deck (and switch anytime):
+
+```text
+Install and configure the Antigravity Action Launchpad plugin for me from https://github.com/404kidwiz/antigravity-suggestion-helper:
+
+1. Clone https://github.com/404kidwiz/antigravity-suggestion-helper.git into ~/.gemini/config/plugins/antigravity-deck (if it already exists, pull latest main) and verify Node.js 20+ is available.
+2. Ask me just 2 quick multiple-choice questions so it fits how I work without being too much all at once:
+   - Question 1 (Mode): Start slimmed down or unlock the full deck?
+     • Slim (Recommended to start) — Super clean 1-line suggestion pills + hover Why/What inspector only (no chips, inputs, or extra controls)
+     • Full — Full Action Launchpad: 1-line pills plus ChoicePicker chips, inline short text inputs, checkboxes, and 2-step approval gates when relevant
+   - Question 2 (Frequency): How often should it appear?
+     • Balanced (Recommended) — After completed tasks & key decision points; skip quick Q&A
+     • Minimal — Only before high-stakes actions or multi-option choices
+     • Proactive — On almost every substantive turn so I rarely have to type follow-ups
+3. Tailor ~/.gemini/config/plugins/antigravity-deck/rules/AGENTS.md to my 2 choices (noting I can ask to switch between Slim and Full anytime), link me to Customizations to enable the plugin if needed, and show a quick live preview card matching my preset.
+```
+
+### Option B — Manual drop-in (no `npm install` needed)
 
 Clone or download this repository directly into your Antigravity plugins directory:
 
@@ -37,7 +56,7 @@ git clone https://github.com/404kidwiz/antigravity-suggestion-helper.git ~/.gemi
 
 Then enable **Antigravity Action Launchpad** in Antigravity's **Customizations / Plugins** page (requires Node.js 20+ on `PATH`).
 
-### Option B — Build from source
+### Option C — Build from source
 
 ```bash
 pnpm install
