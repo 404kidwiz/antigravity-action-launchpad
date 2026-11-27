@@ -1,7 +1,7 @@
 {
   "name": "antigravity-action-launchpad",
   "displayName": "Antigravity Action Launchpad",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Inline chat Action Launchpad MCP App: ultra-compact 1-line follow-up pills, live hover Why/What Decision Inspector, A2UI-inspired ChoicePicker chips, inline short text inputs, checkboxes, and 2-step approval gates.",
   "author": {
     "name": "Andrew Morris",
