@@ -1,6 +1,6 @@
 # Antigravity Action Launchpad (`antigravity-deck`)
 
-![Antigravity Action Launchpad — Inline pills, ChoicePicker & approval gates for MCP](assets/hero.jpg)
+![Antigravity Action Launchpad — Inline pills, ChoicePicker & approval gates for MCP](assets/hero.png)
 
 A lightweight, zero-framework **MCP App** plugin for Google Antigravity that renders native inline chat **Action Launchpad** cards (`deck_actions`) — ultra-compact 1-line follow-up pills, a zero-jump hover **Why / What** Decision Inspector, A2UI-inspired **ChoicePicker** chips, inline short text inputs, selectable checkboxes, and 2-step **Propose-Then-Apply** approval gates.
 
